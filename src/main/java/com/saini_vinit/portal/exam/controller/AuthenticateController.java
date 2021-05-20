@@ -1,5 +1,7 @@
 package com.saini_vinit.portal.exam.controller;
 
+import java.security.Principal;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -8,6 +10,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.saini_vinit.portal.exam.config.JwtUtil;
 import com.saini_vinit.portal.exam.entity.JwtRequest;
 import com.saini_vinit.portal.exam.entity.JwtResponse;
+import com.saini_vinit.portal.exam.entity.User;
 import com.saini_vinit.portal.exam.service.impl.UserDetailsServiceImpl;
 
 import lombok.AllArgsConstructor;
@@ -40,7 +44,8 @@ public class AuthenticateController {
 			e.printStackTrace();
 
 			//throw new Exception("User not found");
-			return ResponseEntity.badRequest().body("User not found");
+			return ResponseEntity
+					.badRequest().body("User not found");
 		}
 
 		// authenticate
@@ -49,15 +54,28 @@ public class AuthenticateController {
 
 		String generatedToken = this.jwtUtil.generateToken(loadUserByUsername);
 
-		return ResponseEntity.ok(new JwtResponse(generatedToken));
+		return ResponseEntity
+				.ok(new JwtResponse(generatedToken));
 
 	}
+	
+	
+	//current user
+	@GetMapping("/current-user")
+	private User getCurrentUsr(Principal principal) {
+		return (User)this.UserDetailsServiceImpl.loadUserByUsername(principal.getName());
+	}
+	
+	
+	
+	
 
 	private void authenticate(String username, String password) throws Exception {
 
 		try {
 
-			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+			authenticationManager
+				.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 
 		} catch (DisabledException e) {
 			throw new Exception("USER DISABLED");
