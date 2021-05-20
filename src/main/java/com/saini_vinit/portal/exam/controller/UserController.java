@@ -3,6 +3,7 @@ package com.saini_vinit.portal.exam.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +21,7 @@ import lombok.AllArgsConstructor;
 @RestController
 @AllArgsConstructor
 @RequestMapping("saini_vinit/exam/api/user/")
+@CrossOrigin("*")
 public class UserController {
 	
 	private final UserService userService;
