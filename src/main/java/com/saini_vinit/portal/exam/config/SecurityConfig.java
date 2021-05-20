@@ -51,7 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		
 			.csrf().disable()
 			.cors().disable()
-			.authorizeRequests().antMatchers("/genrate-token","saini_vinit/exam/api/user/register").permitAll()
+			.authorizeRequests().antMatchers("/genrate-token","/user/").permitAll()
 			.antMatchers(HttpMethod.OPTIONS).permitAll()
 			.anyRequest().authenticated()
 			.and()

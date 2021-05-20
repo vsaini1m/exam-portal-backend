@@ -20,13 +20,13 @@ import lombok.AllArgsConstructor;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("saini_vinit/exam/api/user/")
+@RequestMapping("/user")
 @CrossOrigin("*")
 public class UserController {
 	
 	private final UserService userService;
 
-	@PostMapping("/register")
+	@PostMapping("/")
 	public User createUser(@RequestBody User user) throws Exception {
 		
 		List<UserRole> roles=new ArrayList<>();

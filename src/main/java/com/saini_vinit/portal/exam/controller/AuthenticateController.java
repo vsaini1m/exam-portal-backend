@@ -7,18 +7,21 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.saini_vinit.portal.exam.config.JwtUtil;
 import com.saini_vinit.portal.exam.entity.JwtRequest;
+import com.saini_vinit.portal.exam.entity.JwtResponse;
 import com.saini_vinit.portal.exam.service.impl.UserDetailsServiceImpl;
 
 import lombok.AllArgsConstructor;
 
 @RestController
 @AllArgsConstructor
+@CrossOrigin("*")
 public class AuthenticateController {
 
 	private final AuthenticationManager authenticationManager;
@@ -27,7 +30,7 @@ public class AuthenticateController {
 
 	// genrateToken
 	@PostMapping("/genrate-token")
-	public ResponseEntity genrateToken(@RequestBody JwtRequest jwtRequest) throws Exception {
+	public ResponseEntity<?> genrateToken(@RequestBody JwtRequest jwtRequest) throws Exception {
 
 		try {
 
@@ -36,7 +39,8 @@ public class AuthenticateController {
 		} catch (UsernameNotFoundException e) {
 			e.printStackTrace();
 
-			throw new Exception("User not found");
+			//throw new Exception("User not found");
+			return ResponseEntity.badRequest().body("User not found");
 		}
 
 		// authenticate
@@ -45,7 +49,7 @@ public class AuthenticateController {
 
 		String generatedToken = this.jwtUtil.generateToken(loadUserByUsername);
 
-		return ResponseEntity.ok(generatedToken);
+		return ResponseEntity.ok(new JwtResponse(generatedToken));
 
 	}
 
