@@ -3,6 +3,7 @@ package com.saini_vinit.portal.exam.service.impl;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.saini_vinit.portal.exam.entity.User;
@@ -20,6 +21,7 @@ public class UserServiceImpl implements UserService {
 
 	private final UserRepositery userRepositery;
 	private final RoleRepositery roleRepositery;
+	private final BCryptPasswordEncoder passwordEncoder;
 	
 
 	@Override
@@ -38,6 +40,8 @@ public class UserServiceImpl implements UserService {
 				roleRepositery.save(ur.getRole());
 			}
 			user.getUserRoles().addAll(userRole);
+			
+			user.setPassword(passwordEncoder.encode(user.getPassword()));
 			
 			local=this.userRepositery.save(user);
 		}
