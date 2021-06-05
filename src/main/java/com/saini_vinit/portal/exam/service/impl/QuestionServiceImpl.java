@@ -51,7 +51,7 @@ public class QuestionServiceImpl implements QuestionService{
 	@Override
 	public List<Question> getQuestionOfQuiz(Quiz quiz) {
 		
-		return null;
+		return this.questionRepositery.findByQuiz(quiz);
 	}
 
 	
