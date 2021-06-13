@@ -34,9 +34,9 @@ public class Quiz {
 	
 	private String description;
 	
-	private String maxMarks;
+	private String maxMax;
 	
-	private String numberOfQuestions;
+	private String numberOfQuestion;
 	
 	
 	private boolean active=false;
@@ -48,5 +48,7 @@ public class Quiz {
 	@OneToMany(mappedBy = "quiz",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
 	@JsonIgnore
 	private List<Question> questions=new ArrayList<>();
+	
+	
 	
 }

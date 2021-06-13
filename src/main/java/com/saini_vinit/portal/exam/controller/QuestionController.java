@@ -43,7 +43,7 @@ public class QuestionController {
 		return ResponseEntity.ok(questionService.updateQuestion(question));
 	}
 	
-	@GetMapping("/quiz/{qid}")
+	@GetMapping("/questions/{qid}")
 	public ResponseEntity<?> getQuestionsOfQuiz(@PathVariable("qid") Long id) {
 		
 //		Quiz quiz = new Quiz();
@@ -58,8 +58,8 @@ public class QuestionController {
 		
 		List<Question> questions = quizById.getQuestions();
 		
-		if(questions.size()>Integer.parseInt(quizById.getNumberOfQuestions())) {
-			questions=questions.subList(0, Integer.parseInt(quizById.getNumberOfQuestions())+1);
+		if(questions.size()>Integer.parseInt(quizById.getNumberOfQuestion())) {
+			questions=questions.subList(0, Integer.parseInt(quizById.getNumberOfQuestion())+1);
 		}
 		
 		Collections.shuffle(questions);
@@ -68,6 +68,21 @@ public class QuestionController {
 		
 	}
 	
+	
+
+	@GetMapping("/questions/all/{qid}")
+	public ResponseEntity<?> getQuestionsOfQuizForAdmin(@PathVariable("qid") Long id) {
+		
+		Quiz quiz = new Quiz();
+		quiz.setQId(id);
+		
+		
+		
+		return ResponseEntity.ok(questionService.getQuestionOfQuiz(quiz));
+		
+		
+		
+	}
 	@GetMapping("/{question}")
 	public ResponseEntity<?> getQuestion(@PathVariable("question") Long id) {
 		

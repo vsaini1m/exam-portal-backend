@@ -1,6 +1,7 @@
 package com.saini_vinit.portal.exam.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -42,7 +43,9 @@ public class QuizServiceImpl implements QuizService{
 
 	@Override
 	public void deleteQuizById(Long id) {
+		
 		this.quizRepositery.deleteById(id);
+		
 		
 	}
 

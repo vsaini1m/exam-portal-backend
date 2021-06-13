@@ -49,7 +49,7 @@ public class QuizController {
 	
 	@DeleteMapping("/{quiz_id}")
 	public ResponseEntity<?> deleteQuiz(@PathVariable("quiz_id") Long id) {
-		
+		System.out.println("id deleted"+id);
 		quizService.deleteQuizById(id);
 		return ResponseEntity.ok().build();
 	}
