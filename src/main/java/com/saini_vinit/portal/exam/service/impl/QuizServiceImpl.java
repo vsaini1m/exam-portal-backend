@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.saini_vinit.portal.exam.entity.exam.Category;
 import com.saini_vinit.portal.exam.entity.exam.Quiz;
 import com.saini_vinit.portal.exam.repositery.QuizRepositery;
 import com.saini_vinit.portal.exam.service.QuizService;
@@ -47,6 +48,14 @@ public class QuizServiceImpl implements QuizService{
 		this.quizRepositery.deleteById(id);
 		
 		
+	}
+
+	@Override
+	public List<Quiz> getQuizsByCategory(Category category) {
+		
+		
+		
+		return this.quizRepositery.findBycategory(category);
 	}
 
 }

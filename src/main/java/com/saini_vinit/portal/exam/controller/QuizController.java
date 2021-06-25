@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.saini_vinit.portal.exam.entity.exam.Category;
 import com.saini_vinit.portal.exam.entity.exam.Quiz;
 import com.saini_vinit.portal.exam.service.QuizService;
 
@@ -53,5 +54,18 @@ public class QuizController {
 		quizService.deleteQuizById(id);
 		return ResponseEntity.ok().build();
 	}
+	
+	@GetMapping("/category/{category_id}")
+	public ResponseEntity<?> getQuizByCategory(@PathVariable("category_id") Long id) {
+		
+		Category category = new Category();
+		category.setCId(id);
+		
+		return ResponseEntity.ok(quizService.getQuizsByCategory(category));
+		
+		
+	}
+	
+	
 	
 }

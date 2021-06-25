@@ -1,11 +1,9 @@
 package com.saini_vinit.portal.exam.controller;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.method.P;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -75,11 +73,8 @@ public class QuestionController {
 		
 		Quiz quiz = new Quiz();
 		quiz.setQId(id);
-		
-		
-		
-		return ResponseEntity.ok(questionService.getQuestionOfQuiz(quiz));
-		
+			
+		return ResponseEntity.ok(questionService.getQuestionOfQuiz(quiz));		
 		
 		
 	}

@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -32,6 +33,7 @@ public class Quiz {
 	
 	private String title;
 	
+	@Column(length = 5000)
 	private String description;
 	
 	private String maxMax;

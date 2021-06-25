@@ -2,6 +2,7 @@ package com.saini_vinit.portal.exam.service;
 
 import java.util.List;
 
+import com.saini_vinit.portal.exam.entity.exam.Category;
 import com.saini_vinit.portal.exam.entity.exam.Quiz;
 
 public interface QuizService {
@@ -16,6 +17,8 @@ public interface QuizService {
 	
 	
 	public void deleteQuizById(Long id);
+	
+	public List<Quiz> getQuizsByCategory(Category id);
 	
 	
 	
