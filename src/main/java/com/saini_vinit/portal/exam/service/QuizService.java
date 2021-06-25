@@ -20,7 +20,9 @@ public interface QuizService {
 	
 	public List<Quiz> getQuizsByCategory(Category id);
 	
+	public List<Quiz> getActiveQuizzes();
 	
+	public List<Quiz> getActiveQuizzesOfCategory(Category c);
 	
 	
 	
