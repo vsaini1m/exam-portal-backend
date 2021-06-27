@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.saini_vinit.portal.exam.dto.ResultCategoryDto;
 import com.saini_vinit.portal.exam.entity.exam.Category;
 import com.saini_vinit.portal.exam.service.CategoryService;
 
@@ -29,10 +30,13 @@ public class CategoryController {
 	@PostMapping("/")
 	public ResponseEntity<?> addCategory(@RequestBody Category category){
 		
-		 Category addCategory = this.categoryService.addCategory(category);
+		 ResultCategoryDto addCategory = this.categoryService.addCategory(category);
+		 
+		 return addCategory.isSuccess()?
+				 ResponseEntity.ok(addCategory.getCategory()):
+					 ResponseEntity.badRequest().body(addCategory.getErrors());
 		 
 		 
-		 return ResponseEntity.ok(addCategory);
 	}
 	
 
@@ -41,15 +45,25 @@ public class CategoryController {
 		
 		
 		
-		 Category addCategory = this.categoryService.addCategory(category);
+		 ResultCategoryDto addCategory = this.categoryService.addCategory(category);
 		 
 		 
-		 return ResponseEntity.ok(addCategory);
+		 return addCategory.isSuccess()?
+				 ResponseEntity.ok(addCategory.getCategory()):
+					 ResponseEntity.badRequest().body(addCategory.getErrors());
+		 
+		 
 	}
 	
 	@GetMapping("/{category_id}")
 	public ResponseEntity<?> getCategory(@PathVariable("category_id") Long id) {
-		return ResponseEntity.ok(categoryService.getCategoryById(id));
+		
+		ResultCategoryDto categoryById = this.categoryService.getCategoryById(id);
+		
+		return categoryById.isSuccess()?
+				ResponseEntity.ok(categoryById.getCategory()):
+					ResponseEntity.badRequest().body(categoryById.getErrors());
+		
 	}
 	
 	@GetMapping("/")
@@ -60,9 +74,11 @@ public class CategoryController {
 	@DeleteMapping("/{category_id}")
 	public ResponseEntity<?> deleteCategory(@PathVariable("category_id") Long id) {
 		
-		categoryService.deleteCategoryById(id);
+		ResultCategoryDto deleteCategoryById = categoryService.deleteCategoryById(id);
 		
-		return ResponseEntity.ok().build();
+		return deleteCategoryById.isSuccess()?
+				ResponseEntity.ok(""):
+					ResponseEntity.badRequest().body(deleteCategoryById.getErrors());
 		
 	}
 	

@@ -1,10 +1,13 @@
 package com.saini_vinit.portal.exam.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import com.saini_vinit.portal.exam.dto.ResultQuizDto;
 import com.saini_vinit.portal.exam.entity.exam.Category;
 import com.saini_vinit.portal.exam.entity.exam.Quiz;
 import com.saini_vinit.portal.exam.repositery.QuizRepositery;
@@ -19,15 +22,55 @@ public class QuizServiceImpl implements QuizService{
 	private final QuizRepositery quizRepositery;
 	
 	@Override
-	public Quiz addQuiz(Quiz quiz) {
+	public ResultQuizDto addQuiz(Quiz quiz) {
 		
-		return this.quizRepositery.save(quiz);
+		ResultQuizDto resultQuizDto=null;
+		
+		 Quiz save = this.quizRepositery.save(quiz);
+		 
+		 if (save!=null) {
+			//created
+			 
+			 resultQuizDto=ResultQuizDto.builder().success(true)
+					 .quiz(new ModelMapper().map(save, Quiz.class))
+					 .build();
+		}else {
+			//errrs
+			
+			List<String> errors=new ArrayList<>();
+			errors.add("Quiz creation faild");
+			
+			resultQuizDto=ResultQuizDto.builder().success(false)
+					.errors(errors)
+					.build();
+		}
+		 
+		 return resultQuizDto;
 	}
 
 	@Override
-	public Quiz updateQuiz(Quiz quiz) {
-		
-		return this.quizRepositery.save(quiz);
+	public ResultQuizDto updateQuiz(Quiz quiz) {
+		ResultQuizDto resultQuizDto=null;
+		 Quiz save = this.quizRepositery.save(quiz);
+		 
+		 if (save!=null) {
+			//updated
+			 
+
+			 resultQuizDto=ResultQuizDto.builder().success(true)
+					 .quiz(new ModelMapper().map(save, Quiz.class))
+					 .build();
+			 
+		}else {
+			//error
+			List<String> errors=new ArrayList<>();
+			errors.add("Quiz update faild");
+			
+			resultQuizDto=ResultQuizDto.builder().success(false)
+					.errors(errors)
+					.build();
+		}
+		 return resultQuizDto;
 	}
 
 	@Override
@@ -37,15 +80,58 @@ public class QuizServiceImpl implements QuizService{
 	}
 
 	@Override
-	public Quiz getQuizById(Long id) {
-		
-		return this.quizRepositery.findById(id).get();
+	public ResultQuizDto getQuizById(Long id) {
+		ResultQuizDto resultQuizDto=null;
+		 Optional<Quiz> findById = this.quizRepositery.findById(id);
+		 
+		 if (findById.isPresent()) {
+			//found
+			 
+
+			 resultQuizDto=ResultQuizDto.builder().success(true)
+					 .quiz(new ModelMapper().map(findById, Quiz.class))
+					 .build();
+			 
+		}else {
+			//error not found
+			
+			List<String> errors=new ArrayList<>();
+			errors.add("Quiz not found");
+			
+			resultQuizDto=ResultQuizDto.builder().success(false)
+					.errors(errors)
+					.build();
+		}
+		 return resultQuizDto;
 	}
 
 	@Override
-	public void deleteQuizById(Long id) {
+	public ResultQuizDto deleteQuizById(Long id) {
+		ResultQuizDto resultQuizDto=null;
 		
-		this.quizRepositery.deleteById(id);
+		
+		try {
+			
+			
+			this.quizRepositery.deleteById(id);
+
+			//success
+			
+			 resultQuizDto=ResultQuizDto.builder().success(true)
+					 .build();
+			
+		} catch (Exception e) {
+			//error
+			
+			List<String> errors=new ArrayList<>();
+			errors.add("Quiz delition faild");
+			
+			resultQuizDto=ResultQuizDto.builder().success(false)
+					.errors(errors)
+					.build();
+		}
+		
+		return resultQuizDto;
 		
 		
 	}

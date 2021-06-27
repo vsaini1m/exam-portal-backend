@@ -1,9 +1,13 @@
 package com.saini_vinit.portal.exam.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import com.saini_vinit.portal.exam.dto.ResultQuestionDto;
 import com.saini_vinit.portal.exam.entity.exam.Question;
 import com.saini_vinit.portal.exam.entity.exam.Quiz;
 import com.saini_vinit.portal.exam.repositery.QuestionRepositery;
@@ -18,15 +22,59 @@ public class QuestionServiceImpl implements QuestionService{
 	private final QuestionRepositery questionRepositery;
 	
 	@Override
-	public Question addQuestion(Question question) {
+	public ResultQuestionDto addQuestion(Question question) {
 		
-		return this.questionRepositery.save(question);
+		ResultQuestionDto resultQuestionDto=null;
+		 Question save = this.questionRepositery.save(question);
+		 
+		 if(save!=null) {
+			 //added successfully
+			 
+			 resultQuestionDto=ResultQuestionDto.builder().success(true)
+					 .question(new ModelMapper().map(save, Question.class)).build();
+		 }else {
+			 //error
+			 
+			 List<String>errors=new ArrayList<>();
+			 errors.add("Question process faild");
+			 resultQuestionDto=ResultQuestionDto.builder().success(false)
+					 .errors(errors)
+					.build();
+		 }
+			 
+		 
+		 
+		 return resultQuestionDto;
 	}
 
 	@Override
-	public Question updateQuestion(Question question) {
+	public ResultQuestionDto updateQuestion(Question question) {
+		ResultQuestionDto resultQuestionDto=null;
 		
-		return this.questionRepositery.save(question);
+		 Question save = this.questionRepositery.save(question);
+		 
+		 if(save!=null) {
+			//updated
+			 
+			 resultQuestionDto=ResultQuestionDto.builder().success(true)
+					 .question(new ModelMapper().map(save, Question.class)).build();
+			 
+			 
+		 }else {
+			 //error
+			 
+			 
+			 List<String> errors=new ArrayList<>();
+			 
+			 errors.add("Question update faild");
+			 
+			 resultQuestionDto=ResultQuestionDto.builder().success(false)
+					 .errors(errors).build();
+			 
+			 
+		 }
+		 
+		 return resultQuestionDto;
 	}
 
 	@Override
@@ -36,15 +84,62 @@ public class QuestionServiceImpl implements QuestionService{
 	}
 
 	@Override
-	public Question getQuestion(Long id) {
+	public ResultQuestionDto getQuestion(Long id) {
+		ResultQuestionDto resultQuestionDto=null;
 		
-		return this.questionRepositery.findById(id).get();
+		
+		 Optional<Question> findById = this.questionRepositery.findById(id);
+		 
+		 if(findById.isPresent()) {
+			 //quiestion found
+			 
+			 resultQuestionDto=ResultQuestionDto.builder().success(true)
+					 .question(new ModelMapper().map(findById, Question.class)).build();
+			 
+			 
+		 }else {
+			 //error not found
+			 
+			 List<String> errors=new ArrayList<>();
+			 
+			 errors.add("Question not found");
+			
+			 
+			 resultQuestionDto=ResultQuestionDto.builder().success(false)
+					 .errors(errors)
+					 .build();
+		 }
+		 
+		 return resultQuestionDto;
 	}
 
 	@Override
-	public void deleteQuestionById(Long id) {
+	public ResultQuestionDto deleteQuestionById(Long id) {
 		
-		this.questionRepositery.deleteById(id);
+		ResultQuestionDto resultQuestionDto=null;
+		
+		try {
+			this.questionRepositery.deleteById(id);
+			
+			//success
+			
+			resultQuestionDto=ResultQuestionDto.builder().success(true)
+					.build();
+		} catch (Exception e) {
+			//error
+			
+			 
+			 List<String> errors=new ArrayList<>();
+			 
+			 errors.add("Question deletion process faild");
+			
+			 resultQuestionDto=ResultQuestionDto.builder().success(false)
+					 .errors(errors).build();
+			 
+			 
+		}
+		
+		return resultQuestionDto ;
 		
 	}
 

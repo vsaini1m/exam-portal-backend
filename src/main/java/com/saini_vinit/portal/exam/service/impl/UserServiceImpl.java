@@ -1,11 +1,14 @@
 package com.saini_vinit.portal.exam.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.saini_vinit.portal.exam.dto.ResultUserDto;
 import com.saini_vinit.portal.exam.entity.User;
 import com.saini_vinit.portal.exam.entity.UserRole;
 import com.saini_vinit.portal.exam.repositery.RoleRepositery;
@@ -25,33 +28,72 @@ public class UserServiceImpl implements UserService {
 	
 
 	@Override
-	public User createUser(User user, List<UserRole> userRole) throws Exception {
+	public ResultUserDto createUser(User user, List<UserRole> userRole) throws Exception {
 
-		// check already
-		User local = this.userRepositery.findByUsername(user.getUsername());
+		
+		ResultUserDto resultUserDto=null;
+		
+	
+		
+		
+		
+		  Optional<User> findByUsername = this.userRepositery.findByUsername(user.getUsername());
+		  
+		  
+		  
+		  if(findByUsername.isPresent()) {
+			 //already present user
+			  
+			  List<String> errors=new ArrayList<>();
+			  
+			  errors.add("User already present");
+			  
+			  resultUserDto=ResultUserDto.builder().success(false).errors(errors).build();
+			  
+			  
+		  }else {
+			  for(UserRole ur:userRole) {
+					roleRepositery.save(ur.getRole());
+				}
+				user.getUserRoles().addAll(userRole);
+				
+				user.setPassword(passwordEncoder.encode(user.getPassword()));
+				
+				
+				
+				User savedUser = this.userRepositery.save(user);
+				
+				resultUserDto= ResultUserDto.builder().success(true).user(new ModelMapper().map(savedUser, User.class)).build();
+		  }
+		  
 
-		if (local != null) {
-
-			throw new Exception("already registerd");
-
-		} else {
-			
-			for(UserRole ur:userRole) {
-				roleRepositery.save(ur.getRole());
-			}
-			user.getUserRoles().addAll(userRole);
-			
-			user.setPassword(passwordEncoder.encode(user.getPassword()));
-			
-			local=this.userRepositery.save(user);
-		}
-
-		return local;
+		return resultUserDto;
 	}
 
 	@Override
-	public User getUserByUserName(String username) {
-		return this.userRepositery.findByUsername(username);
+	public ResultUserDto getUserByUserName(String username) {
+		
+		ResultUserDto resultUserDto=null;
+		
+		
+		 Optional<User> findByUsername = this.userRepositery.findByUsername(username);
+		 
+		 if(findByUsername.isPresent()) {
+			 //success
+			 resultUserDto= ResultUserDto.builder().success(true).user(new ModelMapper().map(findByUsername, User.class)).build();
+		 }else {
+			 //user not found
+			 
+			List<String> errors=new ArrayList<>();
+			
+			errors.add("User not found.");
+			
+			resultUserDto=ResultUserDto.builder().success(false).errors(errors).build();
+			 
+		 }
+		 
+		 
+		 return resultUserDto;
 	}
 
 }

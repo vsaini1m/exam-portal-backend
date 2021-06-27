@@ -3,6 +3,7 @@ package com.saini_vinit.portal.exam.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.saini_vinit.portal.exam.dto.ResultUserDto;
 import com.saini_vinit.portal.exam.entity.Role;
 import com.saini_vinit.portal.exam.entity.User;
 import com.saini_vinit.portal.exam.entity.UserRole;
@@ -27,7 +29,7 @@ public class UserController {
 	private final UserService userService;
 
 	@PostMapping("/")
-	public User createUser(@RequestBody User user) throws Exception {
+	public ResponseEntity<?> createUser(@RequestBody User user) throws Exception {
 		
 		List<UserRole> roles=new ArrayList<>();
 		
@@ -41,15 +43,29 @@ public class UserController {
 		
 		roles.add(userRole);
 		
+		ResultUserDto createUser = this.userService.createUser(user, roles);
 		
-		return this.userService.createUser(user, roles);
+		
+		return createUser.isSuccess()?
+				 ResponseEntity.ok(createUser.getUser()):
+					 ResponseEntity.badRequest().body(createUser.getErrors());
+		
+		
+		
 		
 	}
 	
 	@GetMapping("/{username}")
-	public User getUser(@PathVariable("username") String username) {
+	public ResponseEntity<?> getUser(@PathVariable("username") String username) {
 		
-		return this.userService.getUserByUserName(username);
+		ResultUserDto userByUserName = this.userService.getUserByUserName(username);
+		
+		return userByUserName.isSuccess()?
+				ResponseEntity.ok(userByUserName.getUser()):
+					ResponseEntity.badRequest().body(userByUserName.getErrors());
+		
+		
+		
 	}
 	
 	

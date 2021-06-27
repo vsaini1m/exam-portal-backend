@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.saini_vinit.portal.exam.dto.ResultQuestionDto;
 import com.saini_vinit.portal.exam.entity.exam.Question;
 import com.saini_vinit.portal.exam.entity.exam.Quiz;
 import com.saini_vinit.portal.exam.service.QuestionService;
@@ -33,12 +34,22 @@ public class QuestionController {
 	@PostMapping("/")
 	public ResponseEntity<?> addQuestion(@RequestBody Question question) {
 		
-		return ResponseEntity.ok(questionService.addQuestion(question));
+		ResultQuestionDto addQuestion = questionService.addQuestion(question);
+		
+		return addQuestion.isSuccess()?
+				ResponseEntity.ok(addQuestion.getQuestion()):
+					ResponseEntity.badRequest().body(addQuestion.getErrors());
+		
+		
+		
 	}
 	@PutMapping("/")
 	public ResponseEntity<?> updateQuestion(@RequestBody Question question) {
+		ResultQuestionDto updateQuestion = questionService.updateQuestion(question);
 		
-		return ResponseEntity.ok(questionService.updateQuestion(question));
+		return updateQuestion.isSuccess()?
+				ResponseEntity.ok(updateQuestion.getQuestion()):
+					ResponseEntity.badRequest().body(updateQuestion.getErrors());
 	}
 	
 	@GetMapping("/questions/{qid}")
@@ -52,7 +63,7 @@ public class QuestionController {
 //		return ResponseEntity.ok(questionService.getQuestionOfQuiz(quiz));
 		
 		
-		Quiz quizById = this.quizService.getQuizById(id);
+		Quiz quizById = this.quizService.getQuizById(id).getQuiz();
 		
 		List<Question> questions = quizById.getQuestions();
 		
@@ -81,11 +92,17 @@ public class QuestionController {
 	@GetMapping("/{question}")
 	public ResponseEntity<?> getQuestion(@PathVariable("question") Long id) {
 		
-		return ResponseEntity.ok(questionService.getQuestion(id));
+		ResultQuestionDto question = questionService.getQuestion(id);
+		return question.isSuccess()?
+				ResponseEntity.ok(question.getQuestion()):
+					ResponseEntity.badRequest().body(question.getErrors());
+		
 	}
 	@DeleteMapping("/{question}")
 	public ResponseEntity<?> deleteQuestion(@PathVariable("question") Long id) {
-		questionService.deleteQuestionById(id);
-		return ResponseEntity.ok().build();
+		ResultQuestionDto deleteQuestionById = questionService.deleteQuestionById(id);
+		return deleteQuestionById.isSuccess()?
+				ResponseEntity.ok(""):
+					ResponseEntity.badRequest().body(deleteQuestionById.getErrors());
 	}
 }
