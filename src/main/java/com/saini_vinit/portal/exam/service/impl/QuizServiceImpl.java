@@ -89,7 +89,7 @@ public class QuizServiceImpl implements QuizService{
 			 
 
 			 resultQuizDto=ResultQuizDto.builder().success(true)
-					 .quiz(new ModelMapper().map(findById, Quiz.class))
+					 .quiz(new ModelMapper().map(findById.get(), Quiz.class))
 					 .build();
 			 
 		}else {

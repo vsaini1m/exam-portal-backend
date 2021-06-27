@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.saini_vinit.portal.exam.dto.ResultQuestionDto;
+import com.saini_vinit.portal.exam.dto.ResultQuizDto;
 import com.saini_vinit.portal.exam.entity.exam.Question;
 import com.saini_vinit.portal.exam.entity.exam.Quiz;
 import com.saini_vinit.portal.exam.service.QuestionService;
@@ -52,8 +53,10 @@ public class QuestionController {
 					ResponseEntity.badRequest().body(updateQuestion.getErrors());
 	}
 	
-	@GetMapping("/questions/{qid}")
+	@GetMapping("/quiz/{qid}")
 	public ResponseEntity<?> getQuestionsOfQuiz(@PathVariable("qid") Long id) {
+		
+		System.out.println("id is:"+id);
 		
 //		Quiz quiz = new Quiz();
 //		quiz.setQId(id);
@@ -63,11 +66,15 @@ public class QuestionController {
 //		return ResponseEntity.ok(questionService.getQuestionOfQuiz(quiz));
 		
 		
+		
+		
+		
 		Quiz quizById = this.quizService.getQuizById(id).getQuiz();
 		
 		List<Question> questions = quizById.getQuestions();
 		
-		if(questions.size()>Integer.parseInt(quizById.getNumberOfQuestion())) {
+		if(questions.size()>
+		Integer.parseInt(quizById.getNumberOfQuestion())) {
 			questions=questions.subList(0, Integer.parseInt(quizById.getNumberOfQuestion())+1);
 		}
 		

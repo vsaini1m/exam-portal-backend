@@ -94,7 +94,7 @@ public class QuestionServiceImpl implements QuestionService{
 			 //quiestion found
 			 
 			 resultQuestionDto=ResultQuestionDto.builder().success(true)
-					 .question(new ModelMapper().map(findById, Question.class)).build();
+					 .question(new ModelMapper().map(findById.get(), Question.class)).build();
 			 
 			 
 		 }else {

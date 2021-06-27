@@ -103,7 +103,7 @@ public class CategoryServiceImpl implements CategoryService{
 			 //category found
 			 
 			 resultCategoryDto=ResultCategoryDto.builder().success(true)
-					 .category(new ModelMapper().map(findById, Category.class)).build();
+					 .category(new ModelMapper().map(findById.get(), Category.class)).build();
 		 }else {
 			 //error category ot found
 			 
