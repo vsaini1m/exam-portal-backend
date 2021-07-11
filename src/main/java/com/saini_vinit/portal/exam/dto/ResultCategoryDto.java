@@ -6,6 +6,7 @@ import com.saini_vinit.portal.exam.entity.exam.Category;
 
 import lombok.Builder;
 import lombok.Data;
+
 @Builder
 @Data
 public class ResultCategoryDto {

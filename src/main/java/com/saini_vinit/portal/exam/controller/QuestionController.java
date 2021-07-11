@@ -2,6 +2,7 @@ package com.saini_vinit.portal.exam.controller;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -12,14 +13,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.saini_vinit.portal.exam.dto.ResultQuestionDto;
-import com.saini_vinit.portal.exam.dto.ResultQuizDto;
 import com.saini_vinit.portal.exam.entity.exam.Question;
 import com.saini_vinit.portal.exam.entity.exam.Quiz;
 import com.saini_vinit.portal.exam.service.QuestionService;
 import com.saini_vinit.portal.exam.service.QuizService;
+
 
 import lombok.AllArgsConstructor;
 
@@ -111,5 +113,53 @@ public class QuestionController {
 		return deleteQuestionById.isSuccess()?
 				ResponseEntity.ok(""):
 					ResponseEntity.badRequest().body(deleteQuestionById.getErrors());
+	}
+	
+	
+	@PostMapping("/submit-exam")
+	public ResponseEntity<?> calculateTest(@RequestBody List<Question> 
+													questions){
+		
+		System.out.println(questions);
+		
+		double marksGot=0;
+		int correctAnswer=0;
+		int attempted=0;
+		
+		
+		for(Question q:questions){
+			//single questions
+			
+			Question question = this.questionService.getQuestion(q.getQuesId()).getQuestion();
+			
+			if(question.getAnswer().trim().equals(q.getGivenAnswer())) {
+				//correct
+				correctAnswer++;
+				
+				double marksOfSingle=
+						Double.parseDouble(questions.get(0).getQuiz().getMaxMax())
+						/
+						questions.size();
+				
+				marksGot+=marksOfSingle;
+				
+			}
+			 if(q.getGivenAnswer()!=null) {
+				
+				attempted++;
+				
+			}
+			
+			
+			
+			
+		};
+		
+		Map<String, Object> of=Map.of("marksGot",marksGot,"correctAnswers",correctAnswer,"attempted",attempted);
+		
+		
+		
+		return ResponseEntity.ok(of);
+		
 	}
 }

@@ -1,5 +1,6 @@
 package com.saini_vinit.portal.exam.entity;
 
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;

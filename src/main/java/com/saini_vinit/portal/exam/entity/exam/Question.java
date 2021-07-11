@@ -6,10 +6,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 
 @Data
 @AllArgsConstructor
@@ -31,6 +33,9 @@ public class Question {
 	private String option4;
 	
 	private String answer;
+	
+	@Transient
+	private String givenAnswer;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Quiz quiz;
